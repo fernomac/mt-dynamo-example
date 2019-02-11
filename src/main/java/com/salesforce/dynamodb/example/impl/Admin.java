@@ -30,13 +30,18 @@ public class Admin {
 
             catalog.addItem(new Item()
                     .withType("books")
-                    .withName("A Book")
-                    .withDescription("Blah blah"));
+                    .withName("Hannah Montana-Karenina")
+                    .withDescription("Things fall apart, but nothing breaks like a heart."));
+
+            catalog.addItem(new Item()
+                    .withType("books")
+                    .withName("The Adventures of Huckleberry Pimm's Cup")
+                    .withDescription("All this time I was finding myself, and I--I didn't know I was lost"));
 
             catalog.addItem(new Item()
                     .withType("dvds")
-                    .withName("A DVD")
-                    .withDescription("Blah blah blah"));
+                    .withName("The Codfather")
+                    .withDescription("Here comes the joker with his silly grin; he carries a martini made of bathtub gin."));
         });
 
         doFor("ghi", () -> {

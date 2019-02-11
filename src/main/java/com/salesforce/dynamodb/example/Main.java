@@ -72,11 +72,7 @@ public class Main {
 
         public AmazonDynamoDB ddb() {
             if (ddb == null) {
-                ddb = SharedTableBuilder.builder()
-                        .withDefaultProvisionedThroughput(5L)
-                        .withAmazonDynamoDb(localDdb().amazonDynamoDB())
-                        .withContext(context())
-                        .build();
+                ddb = new DdbFactory(localDdb().amazonDynamoDB(), context()).create();
             }
             return ddb;
         }
