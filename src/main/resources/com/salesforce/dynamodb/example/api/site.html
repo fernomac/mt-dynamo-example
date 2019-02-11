@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Multi-tenant DynamoDB Example</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script>
+      function drawFilters(data) {
+        types = new Set();
+        data.items.forEach(function(item) {
+          types.add(item.type);
+        });
+
+        div = "<table><tr><td onclick='drawAll()'>all</td>";
+
+        types.forEach(function(type) {
+          div += "<td onclick='draw(\"" + type + "\")'>" + type + "</td>";
+        });
+
+        div += "</tr></table>";
+        $("#filters").html(div);
+      }
+
+      function drawItems(data) {
+        div = "<table><tr><th>Items for Sale</th></tr>";
+
+        data.items.forEach(function(item) {
+          div += "<tr><td>";
+          div += "Name: " + item.name + "<br/>";
+          div += "Type: " + item.type + "<br/>";
+          div += "Description: " + item.desc + "</br>";
+          div += "<button>BUY IT!</button>";
+          div += "</td></tr>";
+        });
+
+        div += "</table>";
+        $("#items").html(div);
+      }
+
+      function draw(type) {
+        $.getJSON('/api/v1/items?type=' + type, function(data) {
+          drawItems(data);
+        });
+      }
+
+      function drawAll() {
+        $.getJSON('/api/v1/items', function(data) {
+          drawFilters(data);
+          drawItems(data);
+        });
+      }
+
+      window.onload = function() {
+        drawAll();
+      }
+    </script>
+    <style>
+      .main {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+      table {
+        width: 80%;
+        border: 1px solid black;
+        display: inline-block;
+      }
+      th, td {
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='main'>
+      Welcome to ${SITE}!&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/logout">logout</a><br/>
+      &nbsp;<br/>
+      <div id="filters"></div><br/>
+      &nbsp;<br/>
+      <div id="items"></div>
+    </div>
+  </body>
+</html>
