@@ -4,6 +4,9 @@ import com.salesforce.dynamodbv2.mt.context.MtAmazonDynamoDbContextProvider;
 
 import java.util.Optional;
 
+/**
+ * Thread-local context provider.
+ */
 public class Context implements MtAmazonDynamoDbContextProvider {
 
     private final ThreadLocal<String> tenant = new ThreadLocal<>();

@@ -13,13 +13,17 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * A request filter that figures out which site the user is browsing.
+ * A request filter that figures out which site the user is browsing and adds it to
+ * the context.
  */
 @Provider
 public class SiteFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     private final Context context;
 
+    /**
+     * @param context the context to set
+     */
     public SiteFilter(Context context) {
         this.context = context;
     }

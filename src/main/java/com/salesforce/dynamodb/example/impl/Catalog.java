@@ -44,27 +44,6 @@ public class Catalog {
         }
     }
 
-    private void createTable() {
-        KeySchemaElement id_kse = new KeySchemaElement().withAttributeName("id").withKeyType("HASH");
-        KeySchemaElement type_kse = new KeySchemaElement().withAttributeName("type").withKeyType("HASH");
-
-        AttributeDefinition id_ad = new AttributeDefinition().withAttributeName("id").withAttributeType("S");
-        AttributeDefinition type_ad = new AttributeDefinition().withAttributeName("type").withAttributeType("S");
-
-        GlobalSecondaryIndex gsi = new GlobalSecondaryIndex()
-                .withIndexName("type")
-                .withKeySchema(type_kse)
-                .withProjection(new Projection().withProjectionType(ProjectionType.KEYS_ONLY))
-                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-
-        ddb.createTable(new CreateTableRequest()
-                .withTableName("catalog")
-                .withKeySchema(id_kse)
-                .withGlobalSecondaryIndexes(gsi)
-                .withAttributeDefinitions(id_ad, type_ad)
-                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
-    }
-
     /**
      * Gets an item from the catalog by ID.
      *
@@ -124,5 +103,34 @@ public class Catalog {
         mapper.save(item);
 
         return id;
+    }
+
+    private void createTable() {
+        KeySchemaElement id_kse = new KeySchemaElement()
+                .withAttributeName("id")
+                .withKeyType("HASH");
+        KeySchemaElement type_kse = new KeySchemaElement()
+                .withAttributeName("type")
+                .withKeyType("HASH");
+
+        AttributeDefinition id_ad = new AttributeDefinition()
+                .withAttributeName("id")
+                .withAttributeType("S");
+        AttributeDefinition type_ad = new AttributeDefinition()
+                .withAttributeName("type")
+                .withAttributeType("S");
+
+        GlobalSecondaryIndex gsi = new GlobalSecondaryIndex()
+                .withIndexName("type")
+                .withKeySchema(type_kse)
+                .withProjection(new Projection().withProjectionType(ProjectionType.KEYS_ONLY))
+                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
+
+        ddb.createTable(new CreateTableRequest()
+                .withTableName("catalog")
+                .withKeySchema(id_kse)
+                .withGlobalSecondaryIndexes(gsi)
+                .withAttributeDefinitions(id_ad, type_ad)
+                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
     }
 }

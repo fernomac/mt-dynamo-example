@@ -11,24 +11,31 @@ import com.salesforce.dynamodbv2.mt.mappers.sharedtable.SharedTableBuilder;
 public class DdbFactory {
 
     private enum Type {
-        SHARED_ACCOUNT,
+        SEPARATE_TABLES,
         SHARED_TABLE,
     }
-
-    private static final Type TYPE = Type.SHARED_TABLE;
 
     private final AmazonDynamoDB ddb;
     private final Context context;
 
+    /**
+     * @param ddb a single-tenant dynamodb client
+     * @param context the tenant context
+     */
     public DdbFactory(AmazonDynamoDB ddb, Context context) {
         this.ddb = ddb;
         this.context = context;
     }
 
+    private static final Type TYPE = Type.SEPARATE_TABLES;
+
+    /**
+     * Creates a multi-tenant dynamodb client.
+     */
     public AmazonDynamoDB create() {
         switch (TYPE) {
-        case SHARED_ACCOUNT:
-            return sharedAccount();
+        case SEPARATE_TABLES:
+            return separateTables();
 
         case SHARED_TABLE:
             return sharedTable();
@@ -38,14 +45,22 @@ public class DdbFactory {
         }
     }
 
-    public AmazonDynamoDB sharedAccount() {
+    /**
+     * @return a multi-tenant dynamodb client that uses separate
+     *         tables in a shared account
+     */
+    private AmazonDynamoDB separateTables() {
         return MtAmazonDynamoDbByTable.builder()
                 .withAmazonDynamoDb(ddb)
                 .withContext(context)
                 .build();
     }
 
-    public AmazonDynamoDB sharedTable() {
+    /**
+     * @return a multi-tenant dynamodb client that uses a single
+     *         shared table
+     */
+    private AmazonDynamoDB sharedTable() {
         return SharedTableBuilder.builder()
                 .withDefaultProvisionedThroughput(5L)
                 .withAmazonDynamoDb(ddb)

@@ -36,6 +36,12 @@ public class AdminEndpoint {
         out.append("</style></head><body><div class='main'>");
 
         for (String table : ddb.listTables().getTableNames()) {
+            if ("_tablemetadata".equals(table)) {
+                continue;
+            }
+            if (table.startsWith("mt_sharedtablestatic") && !table.equals("mt_sharedtablestatic_s_nolsi")) {
+                continue;
+            }
             appendTableContentsTo(table, out);
         }
 
